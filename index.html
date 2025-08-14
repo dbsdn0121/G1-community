@@ -630,11 +630,11 @@ onAuthStateChanged(auth, (user) => {
     loginA.textContent = '로그인';
     writeBtn.onclick = async () => {
       alert('글을 쓰려면 로그인하세요');
-      await login();
+      openAuthModal('login');
     };
     myPostsBtn.onclick = async () => {
       alert('내가 쓴 글을 보려면 로그인하세요');
-      await login();
+      openAuthModal('login');
     };
     // 로그아웃 시 전체 글로 복귀
     myMode = false;
@@ -982,6 +982,7 @@ document.getElementById('modalLikeBtn').addEventListener('click', (e) => {
 </script>
 </body>
 </html>
+
 
 
 
