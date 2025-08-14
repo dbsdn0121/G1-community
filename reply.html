@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>답글 달기</title>
+<style>
+  :root{
+    --bg-0:#0b0f14; --bg-1:#0e1a26; --text-0:#e6f0ff; --text-dim:#a6b3c2;
+    --neon:#00ffd5; --radius:14px; --shadow:0 8px 30px rgba(0,255,213,.08), 0 2px 8px rgba(0,0,0,.6);
+    --maxw: 720px;
+  }
+  body{ margin:0; background:var(--bg-0); color:var(--text-0);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; }
+  .wrap{ width:min(100%, var(--maxw)); margin:0 auto; padding:20px; }
+  .card{ border-radius:var(--radius); background:linear-gradient(180deg, rgba(17,24,33,.88), rgba(11,16,22,.84));
+         border:1px solid rgba(255,255,255,.07); box-shadow:var(--shadow); padding:16px; }
+  .title{ font-size:18px; margin:0 0 4px; }
+  .meta{ color:var(--text-dim); font-size:13px; margin-bottom:12px; }
+  .body{ line-height:1.7; white-space:pre-wrap; }
+  .field{ margin-top:18px; display:flex; flex-direction:column; gap:8px; }
+  textarea{ width:100%; min-height:140px; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.08); background:#121820; color:var(--text-0); }
+  textarea:focus{ outline:none; border-color:var(--neon); box-shadow:0 0 0 3px rgba(0,255,213,.15); }
+  .row{ display:flex; gap:8px; margin-top:10px; }
+  .primary{ padding:10px 14px; border-radius:10px; border:1px solid var(--neon);
+            background:linear-gradient(180deg, rgba(0,255,213,.12), rgba(0,255,213,.05)); color:var(--neon); font-weight:700; cursor:pointer; }
+  .ghost{ padding:10px 14px; border-radius:10px; border:1px solid rgba(0,255,213,.35); background:transparent; color:var(--neon); cursor:pointer; }
+  .list{ margin-top:18px; display:grid; gap:10px; }
+  .reply{ border:1px solid rgba(255,255,255,.07); border-radius:12px; padding:12px; background:rgba(17,24,33,.6); }
+  .reply .meta{ margin:0 0 6px; font-size:12px; }
+/* reply: 상단 뒤로가기 바 */
+.reply-topbar{
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center;
+  padding: 10px 14px;
+  backdrop-filter: saturate(120%) blur(10px);
+  background: rgba(8,12,18,.6);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.back-btn{
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,255,213,.35);
+  background: transparent;
+  color: #00ffd5;           /* index의 --neon 톤과 유사 */
+  font-weight: 600;
+}
+.back-btn:hover{ box-shadow: 0 0 10px rgba(0,255,213,.35); }
+
+</style>
+</head>
+<body>
+    <nav class="reply-topbar">
+    <button id="go-home" class="back-btn" type="button">← 홈으로</button>
+  </nav>
+  <div class="wrap">
+    <h1 style="margin:10px 0 14px;">답글 달기</h1>
+
+    <!-- 원글 미리보기 -->
+    <section class="card" id="postBox">
+      <h2 class="title" id="postTitle">(제목)</h2>
+      <div class="meta"><span id="postAuthor">익명</span> · <time id="postDate"></time> · <span id="postTag">게시글</span></div>
+      <div class="body" id="postBody"></div>
+    </section>
+
+    <!-- 답글 입력 -->
+    <section class="card" style="margin-top:14px;">
+      <h3 style="margin:0 0 8px;">답글 작성</h3>
+      <div class="field">
+        <label for="replyContent">내용</label>
+        <textarea id="replyContent" placeholder="내용을 입력하세요"></textarea>
+      </div>
+      <div class="row">
+        <button id="submitReply" class="primary">등록</button>
+        <button id="backBtn" class="ghost">취소</button>
+      </div>
+    </section>
+
+    <!-- 답글 목록 -->
+    <section style="margin-top:14px;">
+      <h3 style="margin:0 0 8px;">답글</h3>
+      <div id="replyList" class="list"></div>
+    </section>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+  // ▼ index.html과 동일한 설정 사용
+  const firebaseConfig = {
+    apiKey: "AIzaSyCXAaq4Cl1zheSWD0xclxXX0wfn3VUhsVQ",
+    authDomain: "grade1-community.firebaseapp.com",
+    projectId: "grade1-community",
+    storageBucket: "grade1-community.firebasestorage.app",
+    messagingSenderId: "257458054391",
+    appId: "1:257458054391:web:25743f245b34fc1ace5ff2",
+    measurementId: "G-6ML40374DX"
+  };
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  await setPersistence(auth, browserLocalPersistence);
+
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
+  const $ = (sel) => document.querySelector(sel);
+  const postId = new URL(location.href).searchParams.get('post');
+
+  if (!postId) {
+    alert('잘못된 접근입니다. 게시글 ID가 없습니다.');
+    location.href = './';
+  }
+
+  // UI refs
+  const postTitle = $('#postTitle');
+  const postBody  = $('#postBody');
+  const postAuthor= $('#postAuthor');
+  const postDate  = $('#postDate');
+  const postTag   = $('#postTag');
+  const replyContent = $('#replyContent');
+  const submitReply  = $('#submitReply');
+  const replyList    = $('#replyList');
+  const backBtn      = $('#backBtn');
+
+  function fmtTS(ts){
+    try {
+      if (!ts) return '';
+      const d = ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : new Date(ts));
+      return new Intl.DateTimeFormat('ko-KR',{ dateStyle:'medium', timeStyle:'short' }).format(d);
+    } catch { return ''; }
+  }
+  function escapeHtml(str=''){
+    return str.replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]));
+  }
+
+  // 원글 로드
+  async function loadPost(){
+    const snap = await getDoc(doc(db, 'posts', postId));
+    if (!snap.exists()){
+      alert('게시글을 찾을 수 없습니다.');
+      location.href = './';
+      return;
+    }
+    const p = snap.data();
+    postTitle.textContent  = p.title || '(제목 없음)';
+    postBody.textContent   = p.content || p.preview || '';
+    postAuthor.textContent = p.author || '익명';
+    postDate.textContent   = fmtTS(p.createdAt);
+    postTag.textContent    = p.tag || '게시글';
+  }
+
+  // 답글 목록 실시간 구독
+  function subReplies(){
+    const q = query(collection(db, `posts/${postId}/replies`), orderBy('createdAt', 'asc'));
+    onSnapshot(q, (snap) => {
+      replyList.innerHTML = snap.docs.map(d => {
+        const r = d.data();
+        return `
+          <div class="reply">
+            <div class="meta">${escapeHtml(r.author || '익명')} · ${fmtTS(r.createdAt)}</div>
+            <div class="body">${escapeHtml(r.content || '')}</div>
+          </div>
+        `;
+      }).join('') || `<div style="color:var(--text-dim);">아직 답글이 없습니다.</div>`;
+    });
+  }
+
+  // 로그인 체크 후 폼 동작
+  onAuthStateChanged(auth, async (user) => {
+    if (!user){
+      // 비로그인 시 로그인 요청
+      try { await signInWithPopup(auth, provider); }
+      catch (e){ alert('로그인 후 이용해 주세요.'); location.href = './'; return; }
+    }
+  });
+
+  // 답글 제출
+  submitReply.addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user){
+      alert('로그인 후 이용해 주세요.'); return;
+    }
+    const content = replyContent.value.trim();
+    if (!content){
+      alert('내용을 입력하세요.'); return;
+    }
+    try{
+      await addDoc(collection(db, `posts/${postId}/replies`), {
+        content,
+        uid: user.uid,
+        author: user.displayName || '익명',
+        createdAt: serverTimestamp()
+      });
+      replyContent.value = '';
+      // 등록 후 index로 돌아가 모달 열어주고 싶다면 아래 주석 해제
+      // location.href = `./index.html?post=${encodeURIComponent(postId)}`;
+    }catch(err){
+      console.error(err);
+      alert('답글 저장 중 오류: ' + err.message);
+    }
+  });
+
+  backBtn.addEventListener('click', () => {
+    // 뒤로가거나, 리스트로 이동
+    if (document.referrer) history.back();
+    else location.href = `./index.html?post=${encodeURIComponent(postId)}`;
+  });
+
+  // 초기 로딩
+  await loadPost();
+  subReplies();
+// --- 홈으로 버튼 동작 ---
+const goHomeBtn = document.getElementById('go-home');
+
+if (goHomeBtn){
+  goHomeBtn.addEventListener('click', () => {
+    // 1) 같은 오리진에서 넘어왔다면 '뒤로가기'가 UX가 좋아서 우선 사용
+    if (document.referrer && new URL(document.referrer).origin === location.origin) {
+      history.back();
+      return;
+    }
+    // 2) 직접 열었거나 referrer가 없으면 index로 이동
+    location.href = './'; // index.html 루트로
+  });
+
+  // 보너스: ESC로도 홈 이동
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') goHomeBtn.click();
+  });
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>글쓰기</title>
+<style>
+  /* ===== 기본 테마 ===== */
+  body {
+    background: #0b0f14; color: #e6f0ff;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+    padding: 20px;
+  }
+  input, textarea, select {
+    width: 100%;
+    background: #0e1a26; color: #e6f0ff;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 8px; padding: 10px; margin-bottom: 10px;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none; border-color: #00ffd5; box-shadow: 0 0 0 3px rgba(0,255,213,.15);
+  }
+  .primary {
+    background: linear-gradient(180deg, rgba(0,255,213,.12), rgba(0,255,213,.05));
+    color: #00ffd5; border: 1px solid #00ffd5;
+    border-radius: 8px; padding: 10px 20px; cursor: pointer;
+  }
+  .primary:hover { box-shadow: 0 0 12px rgba(0,255,213,.4); }
+  .ghost {
+    background: transparent; color: #00ffd5;
+    border: 1px solid rgba(0,255,213,.35);
+    border-radius: 8px; padding: 10px 20px; cursor: pointer;
+  }
+  .ghost:hover { box-shadow: 0 0 10px rgba(0,255,213,.35); }
+  .write-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+  /* ===== reply.html과 동일한 상단 홈 버튼 스타일 ===== */
+  .write-topbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center;
+    padding: 10px 14px;
+    backdrop-filter: saturate(120%) blur(10px);
+    background: rgba(8,12,18,.6);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    margin: -20px -20px 12px; /* 페이지 패딩 안 보이게 상단 풀폭 */
+  }
+  .back-btn {
+    cursor: pointer; padding: 8px 12px; border-radius: 999px;
+    border: 1px solid rgba(0,255,213,.35); background: transparent;
+    color: #00ffd5; font-weight: 600;
+  }
+  .back-btn:hover { box-shadow: 0 0 10px rgba(0,255,213,.35); }
+</style>
+</head>
+<body>
+  <!-- ← 홈으로 (reply.html과 동일 UX: history.back 우선) -->
+  <nav class="write-topbar">
+    <button id="go-home" class="back-btn" type="button">← 홈으로</button>
+  </nav>
+
+  <h1 style="margin:12px 0 14px;">글쓰기</h1>
+
+  <!-- form 유지, 버튼은 type="button"으로 새로고침 방지 -->
+  <form id="write-form">
+    <!-- 제목 / 내용 -->
+    <input id="title" name="title" type="text" placeholder="제목" required />
+    <textarea id="content" name="content" placeholder="내용" rows="10" required></textarea>
+
+    <!-- 태그 선택 (공지 제외) -->
+    <label for="tag">태그 선택:</label>
+    <select id="tag" name="tag">
+      <option value="자유">자유</option>
+      <option value="교육과정">교육과정</option>
+      <option value="정보">정보</option>
+      <option value="고민상담">고민상담</option>
+    </select>
+
+    <!-- 액션 버튼 -->
+    <div class="write-actions">
+      <button id="save-post" class="primary" type="button">저장</button>
+      <button id="save-post-anon" class="ghost" type="button">익명 작성</button>
+    </div>
+  </form>
+
+  <script type="module">
+    /* =================== Firebase (CDN, index.html과 동일) =================== */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup,
+      setPersistence, browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXAaq4Cl1zheSWD0xclxXX0wfn3VUhsVQ",
+      authDomain: "grade1-community.firebaseapp.com",
+      projectId: "grade1-community",
+      storageBucket: "grade1-community.firebasestorage.app",
+      messagingSenderId: "257458054391",
+      appId: "1:257458054391:web:25743f245b34fc1ace5ff2",
+      measurementId: "G-6ML40374DX"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+    await setPersistence(auth, browserLocalPersistence);
+
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    /* =================== 요소 참조 =================== */
+    const form      = document.getElementById('write-form');
+    const $title    = document.getElementById('title');
+    const $content  = document.getElementById('content');
+    const $tag      = document.getElementById('tag');
+    const $save     = document.getElementById('save-post');
+    const $saveAnon = document.getElementById('save-post-anon');
+    const goHomeBtn = document.getElementById('go-home');
+
+    /* =================== 홈 버튼 (reply.html과 동일) =================== */
+    if (goHomeBtn){
+      goHomeBtn.addEventListener('click', () => {
+        if (document.referrer && new URL(document.referrer).origin === location.origin) {
+          history.back(); return;
+        }
+        location.href = './'; // index.html
+      });
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') goHomeBtn.click();
+      });
+    }
+
+    /* =================== 로그인 보장 =================== */
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        try { await signInWithPopup(auth, provider); }
+        catch (e) {
+          console.error('[AUTH ERROR]', e);
+          alert('로그인 후 작성 가능합니다.');
+          location.href = './';
+        }
+      }
+    });
+
+    /* =================== 입력 검증 유틸 =================== */
+    function validateInputs() {
+      const title = ($title.value || '').trim();
+      const content = ($content.value || '').trim();
+      const tag = ($tag.value || '자유').trim();
+      if (!title || !content) {
+        alert('제목과 내용을 입력하세요.');
+        return null;
+      }
+      return { title, content, tag };
+    }
+
+    /* =================== 저장 공통 함수 (익명/실명) =================== */
+    async function savePost({ anonymous = false } = {}) {
+      const user = auth.currentUser;
+      if (!user) { alert('로그인 후 작성 가능합니다.'); return; }
+
+      const v = validateInputs(); if (!v) return;
+
+      // 중복 클릭 방지
+      $save.disabled = true; $saveAnon.disabled = true;
+
+      try {
+        await addDoc(collection(db, 'posts'), {
+          title: v.title,
+          content: v.content,
+          preview: v.content.length > 60 ? v.content.slice(0, 60) + '…' : v.content,
+          uid: anonymous ? 'anonymous' : user.uid,
+          author: anonymous ? '익명' : (user.displayName || '익명'),
+          tag: v.tag, // 🔹 태그 저장
+          createdAt: serverTimestamp()
+        });
+        alert('저장 완료!');
+        location.href = './'; // 홈으로 이동
+      } catch (err) {
+        console.error('[SAVE ERROR]', err);
+        alert('저장 중 오류: ' + (err.message || err.code || err));
+      } finally {
+        $save.disabled = false; $saveAnon.disabled = false;
+      }
+    }
+
+    /* =================== 이벤트 바인딩 =================== */
+    // 엔터로 submit해도 저장 버튼과 동일 동작(새로고침 방지)
+    form.addEventListener('submit', (e) => { e.preventDefault(); $save.click(); });
+    // 실명 저장
+    $save.addEventListener('click', () => savePost({ anonymous: false }));
+    // 익명 저장
+    $saveAnon.addEventListener('click', () => savePost({ anonymous: true }));
+  </script>
+</body>
+</html>
