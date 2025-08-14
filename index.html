@@ -280,55 +280,6 @@
       </section>
     </main>
 
-      <!-- ===== Auth Modal (닉네임+이메일 회원가입 / 이메일 로그인) ===== -->
-<div id="authModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
-  <div class="modal-backdrop" data-auth-close="1"></div>
-  <div class="modal-panel" role="document" style="max-width:520px">
-    <button class="modal-close" type="button" aria-label="닫기" data-auth-close="1">✕</button>
-
-    <header class="modal-header">
-      <span class="badge">회원</span>
-      <h2 id="authModalTitle">로그인 / 회원가입</h2>
-      <div class="modal-meta">이메일로 로그인하거나 닉네임으로 회원가입하세요.</div>
-    </header>
-
-    <div style="margin-top:14px; display:flex; gap:8px">
-      <button id="tabSignUp" class="ghost" style="flex:1">회원가입</button>
-      <button id="tabLogin"  class="ghost" style="flex:1">로그인</button>
-    </div>
-
-    <!-- 회원가입 -->
-    <form id="formSignUp" class="modal-body" style="display:none">
-      <label>닉네임</label>
-      <input id="suNickname" type="text" minlength="2" maxlength="20" required
-             placeholder="예: 밤하늘" class="search" style="margin-top:6px">
-
-      <label style="margin-top:12px; display:block">이메일</label>
-      <input id="suEmail" type="email" required placeholder="you@example.com" class="search" style="margin-top:6px">
-
-      <label style="margin-top:12px; display:block">비밀번호</label>
-      <input id="suPassword" type="password" minlength="6" required placeholder="6자 이상" class="search" style="margin-top:6px">
-
-      <button type="submit" class="primary" style="width:100%; margin-top:14px">회원가입</button>
-    </form>
-
-    <!-- 로그인 -->
-    <form id="formLogin" class="modal-body" style="display:block">
-      <label>이메일</label>
-      <input id="liEmail" type="email" required placeholder="you@example.com" class="search" style="margin-top:6px">
-
-      <label style="margin-top:12px; display:block">비밀번호</label>
-      <input id="liPassword" type="password" minlength="6" required placeholder="비밀번호" class="search" style="margin-top:6px">
-
-      <button type="submit" class="primary" style="width:100%; margin-top:14px">로그인</button>
-      <button type="button" id="btnResetPw" class="ghost" style="width:100%; margin-top:8px">비밀번호 재설정 메일 보내기</button>
-    </form>
-
-    <div id="authMsg" style="margin-top:10px; min-height:22px; color: var(--text-dim)"></div>
-  </div>
-</div>
-
-
     <!-- 푸터 -->
     <footer class="footer">
       © <span id="year"></span> G1 Community • 문의: admin@example.com
@@ -363,140 +314,22 @@
   </div>
 
 <script type="module">
-    /* ==================== Auth Modal Logic (Email/Password) ==================== */
-import {
-  getDocs, collection, query as qUsers, where as wUsers, doc as dUsers, setDoc
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-import {
-  getFirestore, doc, getDoc, addDoc, deleteDoc, serverTimestamp,
-  query, where, orderBy, limit, onSnapshot, increment, runTransaction
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-const authModal   = document.getElementById('authModal');
-const tabSignUp   = document.getElementById('tabSignUp');
-const tabLogin    = document.getElementById('tabLogin');
-const formSignUp  = document.getElementById('formSignUp');
-const formLogin   = document.getElementById('formLogin');
-const authMsg     = document.getElementById('authMsg');
-const btnResetPw  = document.getElementById('btnResetPw');
-
-function showAuthTab(which='login'){
-  if (which === 'signup') {
-    formSignUp.style.display = 'block';
-    formLogin.style.display  = 'none';
-  } else {
-    formSignUp.style.display = 'none';
-    formLogin.style.display  = 'block';
-  }
-}
-function openAuthModal(defaultTab='login'){
-  showAuthTab(defaultTab);
-  clearAuthMsg();
-  authModal.classList.remove('hidden');
-  authModal.setAttribute('aria-hidden','false');
-}
-function closeAuthModal(){
-  authModal.classList.add('hidden');
-  authModal.setAttribute('aria-hidden','true');
-}
-function setAuthMsg(text, ok=false){
-  authMsg.style.color = ok ? 'var(--neon)' : 'var(--danger)';
-  authMsg.textContent = text || '';
-}
-function clearAuthMsg(){ setAuthMsg('', true); }
-
-tabSignUp?.addEventListener('click', () => showAuthTab('signup'));
-tabLogin ?.addEventListener('click', () => showAuthTab('login'));
-authModal?.addEventListener('click', (e) => { if (e.target.matches('[data-auth-close]')) closeAuthModal(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAuthModal(); });
-
-/** 닉네임 중복 여부 */
-async function isNicknameTaken(nickname){
-  const q = qUsers(collection(db,'users'), wUsers('nickname','==', nickname));
-  const snap = await getDocs(q);
-  return !snap.empty;
-}
-
-/** 회원가입 */
-formSignUp?.addEventListener('submit', async (e) => {
-  e.preventDefault(); clearAuthMsg();
-  const nickname = (document.getElementById('suNickname').value || '').trim();
-  const email    = (document.getElementById('suEmail').value || '').trim();
-  const pw       = document.getElementById('suPassword').value || '';
-
-  if (nickname.length < 2) return setAuthMsg('닉네임은 2자 이상으로 입력해 주세요.');
-  if (!email.includes('@')) return setAuthMsg('올바른 이메일을 입력해 주세요.');
-  if (pw.length < 6) return setAuthMsg('비밀번호는 6자 이상이어야 합니다.');
-
-  try {
-    if (await isNicknameTaken(nickname)) {
-      return setAuthMsg('이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해 주세요.');
-    }
-    const cred = await createUserWithEmailAndPassword(auth, email, pw);
-    await updateProfile(cred.user, { displayName: nickname });
-    // users/{uid} 문서 생성
-    await setDoc(dUsers(db,'users', cred.user.uid), {
-      uid: cred.user.uid,
-      email,
-      nickname,
-      createdAt: (await import("https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js")).serverTimestamp()
-    });
-
-    setAuthMsg('회원가입 완료! 자동 로그인되었습니다.', true);
-    setTimeout(closeAuthModal, 700);
-  } catch (err) {
-    handleAuthError(err);
-  }
-});
-
-/** 로그인 */
-formLogin?.addEventListener('submit', async (e) => {
-  e.preventDefault(); clearAuthMsg();
-  const email = (document.getElementById('liEmail').value || '').trim();
-  const pw    = document.getElementById('liPassword').value || '';
-  try {
-    await signInWithEmailAndPassword(auth, email, pw);
-    setAuthMsg('로그인 성공!', true);
-    setTimeout(closeAuthModal, 600);
-  } catch (err) {
-    handleAuthError(err);
-  }
-});
-
-/** 비밀번호 재설정 */
-btnResetPw?.addEventListener('click', async () => {
-  clearAuthMsg();
-  const email = (document.getElementById('liEmail').value || '').trim();
-  if (!email) return setAuthMsg('재설정할 이메일을 먼저 입력해 주세요.');
-  try {
-    await sendPasswordResetEmail(auth, email);
-    setAuthMsg('재설정 메일을 보냈습니다. (스팸함도 확인)', true);
-  } catch (err) {
-    handleAuthError(err);
-  }
-});
-
-function handleAuthError(err){
-  const code = err?.code || '';
-  if (code.includes('email-already-in-use')) setAuthMsg('이미 가입된 이메일입니다.');
-  else if (code.includes('invalid-email')) setAuthMsg('이메일 형식이 올바르지 않습니다.');
-  else if (code.includes('weak-password')) setAuthMsg('비밀번호는 6자 이상으로 설정해 주세요.');
-  else if (code.includes('auth/invalid-credential') || code.includes('wrong-password')) setAuthMsg('이메일 또는 비밀번호가 올바르지 않습니다.');
-  else setAuthMsg('오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
-}
-
 // [ADD] 모달 실시간 구독 해제용
 let modalUnsub = null;
 
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
   import {
-    getAuth, onAuthStateChanged, signOut,
-    setPersistence, browserLocalPersistence,
-    createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,
-    sendPasswordResetEmail
+    getAuth, onAuthStateChanged, GoogleAuthProvider,
+    signInWithPopup, signInWithRedirect, getRedirectResult, signOut,
+    setPersistence, browserLocalPersistence
   } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import {
+    getFirestore, collection, doc, addDoc, getDoc, getDocs,
+    query, orderBy, onSnapshot, serverTimestamp, limit,
+    where, deleteDoc,
+    runTransaction, increment
+  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCXAaq4Cl1zheSWD0xclxXX0wfn3VUhsVQ",
@@ -519,14 +352,28 @@ let modalUnsub = null;
   const myPostsBtn = document.getElementById('my-posts-btn');
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
+  async function login() {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      console.warn('Popup failed:', err.code);
+      await signInWithRedirect(auth, provider);
+    }
+  }
+
+  getRedirectResult(auth).catch(err => {
+    console.error('Redirect error:', err);
+  });
 
   loginA.addEventListener('click', async (e) => {
     e.preventDefault();
     if (auth.currentUser) {
       await signOut(auth);
     } else {
-      openAuthModal('login');
+      await login();
     }
   });
 
@@ -543,7 +390,7 @@ function escapeHtml(str='') {
   ));
 }
 
-// ===== 렌더  (내 글 모드에서만) 삭제 버튼 바인딩
+// ===== 렌더 + (내 글 모드에서만) 삭제 버튼 바인딩
 function renderPosts(snap, mine) {
   grid.innerHTML = snap.docs.map(d => {
     const p = d.data();
@@ -578,7 +425,7 @@ function renderPosts(snap, mine) {
         card.remove(); // 화면에서 즉시 제거
       } catch (err) {
         console.error('삭제 오류:', err);
-        alert('삭제 중 오류: '  err.message);
+        alert('삭제 중 오류: ' + err.message);
       }
     };
   });
@@ -635,11 +482,11 @@ onAuthStateChanged(auth, (user) => {
     loginA.textContent = '로그인';
     writeBtn.onclick = async () => {
       alert('글을 쓰려면 로그인하세요');
-      openAuthModal('login');
+      await login();
     };
     myPostsBtn.onclick = async () => {
       alert('내가 쓴 글을 보려면 로그인하세요');
-      openAuthModal('login');
+      await login();
     };
     // 로그아웃 시 전체 글로 복귀
     myMode = false;
@@ -659,7 +506,7 @@ savePostBtn.onclick = async () => {
   await addDoc(collection(db, 'posts'), {
     title,
     content,
-    preview: content.length > 60 ? content.slice(0, 60)  '…' : content,
+    preview: content.length > 60 ? content.slice(0, 60) + '…' : content,
     uid: auth.currentUser.uid,
     author: auth.currentUser.displayName,
     createdAt: serverTimestamp()
@@ -678,7 +525,7 @@ savePostBtn.onclick = async () => {
     await addDoc(collection(db, 'posts'), {
       title,
       content,
-      preview: content.slice(0, 60)  '…',
+      preview: content.slice(0, 60) + '…',
       uid: auth.currentUser.uid,
       author: auth.currentUser.displayName,
       createdAt: serverTimestamp()
@@ -720,7 +567,7 @@ function openPostModal(data) {
   elPostDate.textContent   = fmtTS(data.createdAt);
   elPostTag.textContent    = data.tag || '게시글';
 
-  // 좋아요 UI 참조  초기값
+  // 좋아요 UI 참조 + 초기값
   const modalLikeBtn   = document.getElementById('modalLikeBtn');
   const modalLikeCount = document.getElementById('modalLikeCount');
   if (modalLikeBtn)   modalLikeBtn.dataset.id = data.__id || '';
@@ -936,7 +783,7 @@ window.addEventListener('popstate', ()=>{
 
 // 한 게시물의 좋아요를 토글한다.
 // posts/{postId}/likes/{uid} 문서를 트랜잭션으로 생성/삭제하고,
-// posts/{postId}.likesCount 를 increment(1/-1) 한다.
+// posts/{postId}.likesCount 를 increment(+1/-1) 한다.
 async function toggleLike(postId) {
   const user = auth.currentUser;
   if (!user) {
@@ -963,7 +810,7 @@ async function toggleLike(postId) {
     // onSnapshot으로 카드가 다시 그려지면서 개수/버튼이 갱신됨
   } catch (err) {
     console.error('[LIKE TOGGLE ERROR]', err);
-    alert('좋아요 처리 중 오류: '  (err.message || err.code || err));
+    alert('좋아요 처리 중 오류: ' + (err.message || err.code || err));
   }
 }
 
@@ -987,9 +834,6 @@ document.getElementById('modalLikeBtn').addEventListener('click', (e) => {
 </script>
 </body>
 </html>
-
-
-
 
 
 
