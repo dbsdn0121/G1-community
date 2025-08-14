@@ -73,6 +73,7 @@
       </div>
       <div class="row">
         <button id="submitReply" class="primary">등록</button>
+        <button id="submitReplyAnon" class="ghost">익명 등록</button>
         <button id="backBtn" class="ghost">취소</button>
       </div>
     </section>
@@ -179,30 +180,68 @@
   });
 
   // 답글 제출
-  submitReply.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    if (!user){
-      alert('로그인 후 이용해 주세요.'); return;
-    }
+ // ============================================================
+// ✅ 익명 등록 버튼 핸들러 — 전역에서 한 번만 바인딩
+//    로그인 여부와 무관하게 익명으로 저장합니다.
+// ============================================================
+const submitReplyAnon = document.getElementById('submitReplyAnon');
+
+if (submitReplyAnon) {
+  submitReplyAnon.addEventListener('click', async () => {
     const content = replyContent.value.trim();
     if (!content){
-      alert('내용을 입력하세요.'); return;
+      alert('내용을 입력하세요.');
+      return;
     }
-    try{
+    try {
       await addDoc(collection(db, `posts/${postId}/replies`), {
         content,
-        uid: user.uid,
-        author: user.displayName || '익명',
+        uid: 'anonymous',        // 익명 식별자
+        author: '익명',          // 표시명
         createdAt: serverTimestamp()
       });
       replyContent.value = '';
-      // 등록 후 index로 돌아가 모달 열어주고 싶다면 아래 주석 해제
+      // 익명 등록 후 이동하려면 주석 해제
       // location.href = `./index.html?post=${encodeURIComponent(postId)}`;
-    }catch(err){
+    } catch (err) {
       console.error(err);
       alert('답글 저장 중 오류: ' + err.message);
     }
   });
+}
+
+// ============================================================
+// ✅ 실명 등록 버튼 핸들러 — 기존 로직 유지 (로그인 필요)
+//    로그인 강제는 여기서만 검사합니다.
+// ============================================================
+submitReply.addEventListener('click', async () => {
+  const user = auth.currentUser;
+  if (!user){
+    alert('로그인 후 이용해 주세요.');
+    return;
+  }
+
+  const content = replyContent.value.trim();
+  if (!content){
+    alert('내용을 입력하세요.');
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, `posts/${postId}/replies`), {
+      content,
+      uid: user.uid,
+      author: user.displayName || '익명',
+      createdAt: serverTimestamp()
+    });
+    replyContent.value = '';
+    // 등록 후 index로 돌아가 모달 열고 싶다면 주석 해제
+    // location.href = `./index.html?post=${encodeURIComponent(postId)}`;
+  } catch (err) {
+    console.error(err);
+    alert('답글 저장 중 오류: ' + err.message);
+  }
+});
 
   backBtn.addEventListener('click', () => {
     // 뒤로가거나, 리스트로 이동
@@ -236,3 +275,4 @@ if (goHomeBtn){
 </script>
 </body>
 </html>
+
