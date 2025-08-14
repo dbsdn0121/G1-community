@@ -212,20 +212,7 @@
 </head>
 <body>
 
-    <!-- 회원가입 폼 -->
-<div>
-  <input type="text" id="nickname" placeholder="닉네임">
-  <input type="email" id="email" placeholder="이메일">
-  <input type="password" id="password" placeholder="비밀번호">
-  <button id="signupBtn">회원가입</button>
-</div>
 
-<!-- 로그인 폼 -->
-<div>
-  <input type="email" id="loginEmail" placeholder="이메일">
-  <input type="password" id="loginPassword" placeholder="비밀번호">
-  <button id="loginBtn">로그인</button>
-</div>
 
     <!-- reply.html -->
 
@@ -842,65 +829,12 @@ document.getElementById('modalLikeBtn').addEventListener('click', (e) => {
   toggleLike(postId);
 });
 
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
-const auth = getAuth();
-const db = getFirestore();
-
-// 회원가입
-document.getElementById('signupBtn').addEventListener('click', async () => {
-  const nickname = document.getElementById('nickname').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-
-  if (!nickname || !email || !password) {
-    alert('모든 필드를 입력해주세요.');
-    return;
-  }
-
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const uid = userCredential.user.uid;
-
-    // Firestore에 닉네임 저장
-    await setDoc(doc(db, 'users', uid), { nickname });
-    alert('회원가입 성공');
-  } catch (err) {
-    alert('회원가입 실패: ' + err.message);
-  }
-});
-
-// 로그인
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
-
-  if (!email || !password) {
-    alert('이메일과 비밀번호를 입력해주세요.');
-    return;
-  }
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    alert('로그인 성공');
-  } catch (err) {
-    alert('로그인 실패: ' + err.message);
-  }
-});
-
-
-const user = auth.currentUser;
-if (user) {
-  const snap = await getDoc(doc(db, 'users', user.uid));
-  if (snap.exists()) {
-    console.log('닉네임:', snap.data().nickname);
-  }
-}
 
 </script>
 </body>
 </html>
+
 
 
 
