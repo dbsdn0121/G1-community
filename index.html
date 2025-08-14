@@ -368,6 +368,11 @@ import {
   getDocs, collection, query as qUsers, where as wUsers, doc as dUsers, setDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+import {
+  getFirestore, doc, getDoc, addDoc, deleteDoc, serverTimestamp,
+  query, where, orderBy, limit, onSnapshot, increment, runTransaction
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
 const authModal   = document.getElementById('authModal');
 const tabSignUp   = document.getElementById('tabSignUp');
 const tabLogin    = document.getElementById('tabLogin');
@@ -982,6 +987,7 @@ document.getElementById('modalLikeBtn').addEventListener('click', (e) => {
 </script>
 </body>
 </html>
+
 
 
 
