@@ -39,134 +39,136 @@
 }
 
     
-    .like-btn.liked { border-color: rgba(0,255,213,.8); box-shadow: 0 0 10px rgba(0,255,213,.45); }
+.like-btn.liked { border-color: rgba(0,255,213,.8); box-shadow: 0 0 10px rgba(0,255,213,.45); }
 
-  /* ===== CSS 변수 (네온 팔레트) ===== */
-  :root {
-    --bg-0: #0b0f14;
-    --bg-1: #0e1a26;
-    --text-0: #e6f0ff;
-    --text-dim: #a6b3c2;
-    --neon: #00ffd5;
-    --neon-2: #6a7dff;
-    --danger: #ff5470;
-    --radius: 14px;
-    --shadow: 0 8px 30px rgba(0,255,213,0.08), 0 2px 8px rgba(0,0,0,0.6);
-    --maxw: 980px;
-  }
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
-    color: var(--text-0); background: var(--bg-0);
-  }
-  a { color: var(--neon); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .page { position: relative; min-height: 100%; }
+/* ===== CSS 변수 (네온 팔레트) ===== */
+:root {
+  --bg-0: #0b0f14;
+  --bg-1: #0e1a26;
+  --text-0: #e6f0ff;
+  --text-dim: #a6b3c2;
+  --neon: #00ffd5;
+  --neon-2: #6a7dff;
+  --danger: #ff5470;
+  --radius: 14px;
+  --shadow: 0 8px 30px rgba(0,255,213,0.08), 0 2px 8px rgba(0,0,0,0.6);
+  --maxw: 980px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  color: var(--text-0); background: var(--bg-0);
+}
+a { color: var(--neon); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.page { position: relative; min-height: 100%; }
 
-  /* 우주 배경 */
-  .bg-stars, .bg-glow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .bg-stars {
-    background:
-      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.7), transparent 60%),
-      radial-gradient(1.5px 1.5px at 70% 10%, rgba(255,255,255,.6), transparent 60%),
-      radial-gradient(1.5px 1.5px at 40% 80%, rgba(255,255,255,.5), transparent 60%),
-      radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,.5), transparent 60%),
-      radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,.35), transparent 60%);
-    opacity: .35; filter: drop-shadow(0 0 4px rgba(255,255,255,.2));
-  }
-  .bg-glow {
-    background:
-      radial-gradient(600px 400px at 20% -10%, rgba(0,255,213,.18), transparent 60%),
-      radial-gradient(700px 450px at 110% 10%, rgba(106,125,255,.18), transparent 60%),
-      radial-gradient(500px 500px at 50% 120%, rgba(0,255,213,.12), transparent 70%);
-  }
+/* 우주 배경 */
+.bg-stars, .bg-glow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.bg-stars {
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 10%, rgba(255,255,255,.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 40% 80%, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,.35), transparent 60%);
+  opacity: .35; filter: drop-shadow(0 0 4px rgba(255,255,255,.2));
+}
+.bg-glow {
+  background:
+    radial-gradient(600px 400px at 20% -10%, rgba(0,255,213,.18), transparent 60%),
+    radial-gradient(700px 450px at 110% 10%, rgba(106,125,255,.18), transparent 60%),
+    radial-gradient(500px 500px at 50% 120%, rgba(0,255,213,.12), transparent 70%);
+}
 
-  /* 레이아웃 */
-  .container { width: min(100%, var(--maxw)); margin: 0 auto; padding: 24px; position: relative; z-index: 1; }
-  .section { margin-top: 28px; }
-  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-  .section-head h2 { margin: 0; font-size: 20px; letter-spacing: .2px; }
-  .link { color: var(--text-dim); }
-  .link:hover { color: var(--neon); }
+/* 레이아웃 */
+.container { width: min(100%, var(--maxw)); margin: 0 auto; padding: 24px; position: relative; z-index: 1; }
+.section { margin-top: 28px; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.section-head h2 { margin: 0; font-size: 20px; letter-spacing: .2px; }
+.link { color: var(--text-dim); }
+.link:hover { color: var(--neon); }
 
-  /* 상단바 */
-  .topbar {
-    position: sticky; top: 0; z-index: 5;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 18px; backdrop-filter: saturate(120%) blur(10px);
-    background: rgba(8,12,18,.6); border-bottom: 1px solid rgba(255,255,255,.06);
-  }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-  .logo-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 12px var(--neon); }
-  .nav { display: flex; gap: 14px; }
-  .nav a { color: var(--text-0); opacity: .9; }
-  .pill { padding: 6px 12px; border: 1px solid rgba(255,255,255,.08); border-radius: 999px; }
-  .pill:hover { border-color: var(--neon); color: var(--neon); }
+/* 상단바 */
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 18px; backdrop-filter: saturate(120%) blur(10px);
+  background: rgba(8,12,18,.6); border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+.logo-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--neon); box-shadow: 0 0 12px var(--neon); }
+.nav { display: flex; gap: 14px; }
+.nav a { color: var(--text-0); opacity: .9; }
+.pill { padding: 6px 12px; border: 1px solid rgba(255,255,255,.08); border-radius: 999px; }
+.pill:hover { border-color: var(--neon); color: var(--neon); }
 
-  /* 히어로 */
-  .hero {
-    margin-top: 24px; padding: 28px; border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(14,26,38,.9), rgba(11,15,20,.75));
-    border: 1px solid rgba(255,255,255,.06); box-shadow: var(--shadow);
-  }
-  .hero h1 { margin: 0 0 8px; font-size: clamp(22px, 3.2vw, 30px); }
-  .neon { color: var(--neon); text-shadow: 0 0 8px rgba(0,255,213,.6); }
-  .sub { margin: 0; color: var(--text-dim); }
-  .hero-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
-  .search {
-    flex: 1 1 260px; padding: 10px 12px; border-radius: 10px;
-    border: 1px solid rgba(255,255,255,.08); background: rgba(18,24,32,.9);
-    color: var(--text-0);
-  }
-  .search:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,255,213,.15); }
-  .primary {
-    padding: 10px 14px; border-radius: 10px; border: 1px solid var(--neon);
-    background: linear-gradient(180deg, rgba(0,255,213,.12), rgba(0,255,213,.05));
-    color: var(--neon); font-weight: 700; cursor: pointer;
-    transition: transform .15s ease, box-shadow .2s;
-  }
-  .primary:hover { transform: translateY(-1px); box-shadow: 0 0 12px rgba(0,255,213,.4); }
+/* 히어로 */
+.hero {
+  margin-top: 24px; padding: 28px; border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(14,26,38,.9), rgba(11,15,20,.75));
+  border: 1px solid rgba(255,255,255,.06); box-shadow: var(--shadow);
+}
+.hero h1 { margin: 0 0 8px; font-size: clamp(22px, 3.2vw, 30px); }
+.neon { color: var(--neon); text-shadow: 0 0 8px rgba(0,255,213,.6); }
+.sub { margin: 0; color: var(--text-dim); }
+.hero-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+.search {
+  flex: 1 1 260px; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.08); background: rgba(18,24,32,.9);
+  color: var(--text-0);
+}
+.search:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,255,213,.15); }
+.primary {
+  padding: 10px 14px; border-radius: 10px; border: 1px solid var(--neon);
+  background: linear-gradient(180deg, rgba(0,255,213,.12), rgba(0,255,213,.05));
+  color: var(--neon); font-weight: 700; cursor: pointer;
+  transition: transform .15s ease, box-shadow .2s;
+}
+.primary:hover { transform: translateY(-1px); box-shadow: 0 0 12px rgba(0,255,213,.4); }
 
-  /* 칩 */
-  .chips { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .chip {
-    padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.08); color: var(--text-0);
-  }
-  .chip:hover { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 8px rgba(0,255,213,.25); }
+/* 칩 */
+.chips { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08); color: var(--text-0);
+}
+.chip:hover { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 8px rgba(0,255,213,.25); }
+.chip.active{ border-color: var(--neon); color: var(--neon); box-shadow: 0 0 10px rgba(0,255,213,.35); }
 
-  /* 카드 */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-  .card {
-    border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(17,24,33,.88), rgba(11,16,22,.84));
-    border: 1px solid rgba(255,255,255,.07);
-    box-shadow: var(--shadow); padding: 16px;
-    transition: transform .15s ease, box-shadow .2s, border-color .2s;
-  }
-  .card:hover { transform: translateY(-3px); border-color: rgba(0,255,213,.45); box-shadow: 0 0 18px rgba(0,255,213,.25); }
-  .post-card .card-head { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
-  .badge {
-    font-size: 12px; color: #0a1218; background: var(--neon); border-radius: 999px;
-    padding: 4px 8px; box-shadow: 0 0 12px rgba(0,255,213,.55);
-  }
-  .card-title { margin: 0; font-size: 16px; }
-  .card-desc { margin: 8px 0 12px; color: var(--text-dim); font-size: 14px; line-height: 1.45; }
-  .card-actions { display: flex; gap: 8px; }
-  .ghost {
-    background: transparent; color: var(--neon); border: 1px solid rgba(0,255,213,.35);
-    padding: 8px 10px; border-radius: 10px; cursor: pointer;
-  }
-  .ghost:hover { box-shadow: 0 0 10px rgba(0,255,213,.35); }
+/* 카드 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.card {
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(17,24,33,.88), rgba(11,16,22,.84));
+  border: 1px solid rgba(255,255,255,.07);
+  box-shadow: var(--shadow); padding: 16px;
+  transition: transform .15s ease, box-shadow .2s, border-color .2s;
+}
+.card:hover { transform: translateY(-3px); border-color: rgba(0,255,213,.45); box-shadow: 0 0 18px rgba(0,255,213,.25); }
+.post-card .card-head { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
+.badge {
+  font-size: 12px; color: #0a1218; background: var(--neon); border-radius: 999px;
+  padding: 4px 8px; box-shadow: 0 0 12px rgba(0,255,213,.55);
+}
+.card-title { margin: 0; font-size: 16px; }
+.card-desc { margin: 8px 0 12px; color: var(--text-dim); font-size: 14px; line-height: 1.45; }
+.card-actions { display: flex; gap: 8px; }
+.ghost {
+  background: transparent; color: var(--neon); border: 1px solid rgba(0,255,213,.35);
+  padding: 8px 10px; border-radius: 10px; cursor: pointer;
+}
+.ghost:hover { box-shadow: 0 0 10px rgba(0,255,213,.35); }
 
-  /* 푸터 */
-  .footer {
-    margin-top: 40px; padding: 28px 18px; color: var(--text-dim); text-align: center;
-    border-top: 1px solid rgba(255,255,255,.06); background: rgba(8,12,18,.55); backdrop-filter: blur(8px);
-  }
-  /* === [ADD] Post Modal === */
+/* 푸터 */
+.footer {
+  margin-top: 40px; padding: 28px 18px; color: var(--text-dim); text-align: center;
+  border-top: 1px solid rgba(255,255,255,.06); background: rgba(8,12,18,.55); backdrop-filter: blur(8px);
+}
+
+/* === [ADD] Post Modal === */
 .modal.hidden { display: none; }
 .modal { position: fixed; inset: 0; z-index: 1000; }
 .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(2px); }
@@ -184,7 +186,6 @@
 .modal-body img, .modal-body video { max-width: 100%; border-radius: 10px; }
 @media (max-width: 560px) { .modal-panel { margin: 4vh auto; padding: 18px; } .modal-header h2{font-size:19px;} }
 
-
 /* reply: 상단 뒤로가기 바 */
 .reply-topbar{
   position: sticky; top: 0; z-index: 10;
@@ -200,27 +201,28 @@
   border-radius: 999px;
   border: 1px solid rgba(0,255,213,.35);
   background: transparent;
-  color: #00ffd5;           /* index의 --neon 톤과 유사 */
+  color: #00ffd5;
   font-weight: 600;
 }
 .back-btn:hover{ box-shadow: 0 0 10px rgba(0,255,213,.35); }
 
-/* [ADD] 선택된 칩 하이라이트 */
-.chip.active{ border-color: var(--neon); color: var(--neon); box-shadow: 0 0 10px rgba(0,255,213,.35); }
+/* === [ADD] 페이지네이션 === */
+.pagination {
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; align-items: center;
+  margin-top: 18px;
+}
+.pagination .page-btn {
+  padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,.08);
+  background: rgba(18,24,32,.9); color: var(--text-0); cursor: pointer;
+}
+.pagination .page-btn:hover { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 8px rgba(0,255,213,.25); }
+.pagination .page-btn.active {
+  border-color: var(--neon); color: var(--neon); box-shadow: 0 0 10px rgba(0,255,213,.35);
+}
 
 </style>
 </head>
 <body>
-
-
-
-    <!-- reply.html -->
-
-  <!-- ⬇︎ 추가: 상단 뒤로가기 바 -->
-  
-
-  <!-- (기존 내용들 …) -->
-
   <div class="page">
     <!-- 배경 -->
     <div class="bg-stars"></div>
@@ -241,15 +243,15 @@
 
     <!-- 본문 -->
     <main class="container">
-      <!-- 히어로 -->
-       <!-- 글쓰기 폼 (처음엔 숨김) -->
-<section id="write-section" style="display:none; margin-top:20px;">
-  <h2>글쓰기</h2>
-  <input type="text" id="post-title" placeholder="제목" style="width:100%; padding:8px; margin-bottom:8px;">
-  <textarea id="post-content" placeholder="내용" style="width:100%; height:150px; padding:8px;"></textarea>
-  <button id="save-post" class="primary" style="margin-top:8px;">저장</button>
-</section>
+      <!-- 글쓰기 폼 (처음엔 숨김) -->
+      <section id="write-section" style="display:none; margin-top:20px;">
+        <h2>글쓰기</h2>
+        <input type="text" id="post-title" placeholder="제목" style="width:100%; padding:8px; margin-bottom:8px;">
+        <textarea id="post-content" placeholder="내용" style="width:100%; height:150px; padding:8px;"></textarea>
+        <button id="save-post" class="primary" style="margin-top:8px;">저장</button>
+      </section>
 
+      <!-- 히어로 -->
       <section class="hero" id="home">
         <h1>환영합니다! <span class="neon">우주 네온</span> 감성의 커뮤니티</h1>
         <p class="sub">2022 개정 교육과정을 함께 부셔나가는 공간. 질문하고, 공유하고, 서로 돕기!</p>
@@ -277,6 +279,8 @@
           <a href="#" class="link">전체 보기 →</a>
         </div>
         <div class="grid" id="post-grid"></div>
+        <!-- [ADD] 페이지네이션 렌더 영역 -->
+        <div id="pagination" class="pagination"></div>
       </section>
     </main>
 
@@ -284,113 +288,124 @@
     <footer class="footer">
       © <span id="year"></span> G1 Community • 문의: admin@example.com
     </footer>
+
     <!-- === [ADD] 게시글 모달 (단 1개) === -->
-<div id="postModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="postModalTitle">
-  <div class="modal-backdrop" data-close="1"></div>
-  <div class="modal-panel" role="document">
-    <button class="modal-close" type="button" aria-label="닫기" data-close="1">✕</button>
+    <div id="postModal" class="modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="postModalTitle">
+      <div class="modal-backdrop" data-close="1"></div>
+      <div class="modal-panel" role="document">
+        <button class="modal-close" type="button" aria-label="닫기" data-close="1">✕</button>
 
-    <header class="modal-header">
-      <span class="badge" id="postModalTag">게시글</span>
-      <h2 id="postModalTitle">제목</h2>
-      <div class="modal-meta">
-        <span id="postModalAuthor">작성자</span>
-        · <time id="postModalDate"></time>
+        <header class="modal-header">
+          <span class="badge" id="postModalTag">게시글</span>
+          <h2 id="postModalTitle">제목</h2>
+          <div class="modal-meta">
+            <span id="postModalAuthor">작성자</span>
+            · <time id="postModalDate"></time>
+          </div>
+        </header>
+
+        <article id="postModalBody" class="modal-body"></article>
+
+        <div class="modal-actions" style="margin-top:16px; display:flex; justify-content:flex-end;">
+          <button id="modalLikeBtn" class="ghost like-btn" data-id="">👍 <span id="modalLikeCount">0</span></button>
+          <button id="postReplyBtn" class="primary">답글 달기</button>
+        </div>
       </div>
-    </header>
-
-    <article id="postModalBody" class="modal-body">
-      <!-- 본문이 여기 채워집니다 -->
-    </article>
-    <!-- 모달 본문 아래: 액션 영역 -->
-<div class="modal-actions" style="margin-top:16px; display:flex; justify-content:flex-end;">
-    <button id="modalLikeBtn" class="ghost like-btn" data-id="">👍 <span id="modalLikeCount">0</span></button>
-  <button id="postReplyBtn" class="primary">답글 달기</button>
-</div>
-
-  </div>
-</div>
-
+    </div>
   </div>
 
 <script type="module">
-// [ADD] 모달 실시간 구독 해제용
+/* ================= Firestore/App 초기화 ================= */
 let modalUnsub = null;
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, GoogleAuthProvider,
+  signInWithPopup, signInWithRedirect, getRedirectResult, signOut,
+  setPersistence, browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, getDoc,
+  query, orderBy, onSnapshot, serverTimestamp, limit,
+  where, deleteDoc, runTransaction, increment,
+  getDocs, getCountFromServer, startAfter
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-  import {
-    getAuth, onAuthStateChanged, GoogleAuthProvider,
-    signInWithPopup, signInWithRedirect, getRedirectResult, signOut,
-    setPersistence, browserLocalPersistence
-  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-  import {
-    getFirestore, collection, doc, addDoc, getDoc, getDocs,
-    query, orderBy, onSnapshot, serverTimestamp, limit,
-    where, deleteDoc,
-    runTransaction, increment
-  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyCXAaq4Cl1zheSWD0xclxXX0wfn3VUhsVQ",
+  authDomain: "grade1-community.firebaseapp.com",
+  projectId: "grade1-community",
+  storageBucket: "grade1-community.firebasestorage.app",
+  messagingSenderId: "257458054391",
+  appId: "1:257458054391:web:25743f245b34fc1ace5ff2",
+  measurementId: "G-6ML40374DX"
+};
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCXAaq4Cl1zheSWD0xclxXX0wfn3VUhsVQ",
-    authDomain: "grade1-community.firebaseapp.com",
-    projectId: "grade1-community",
-    storageBucket: "grade1-community.firebasestorage.app",
-    messagingSenderId: "257458054391",
-    appId: "1:257458054391:web:25743f245b34fc1ace5ff2",
-    measurementId: "G-6ML40374DX"
-  };
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+await setPersistence(auth, browserLocalPersistence);
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-  await setPersistence(auth, browserLocalPersistence);
+/* ================= DOM 잡기 ================= */
+const loginA      = document.querySelector('a[href="#login"]');
+const writeBtn    = document.querySelector('.hero-actions .primary');
+const grid        = document.getElementById('post-grid');
+const myPostsBtn  = document.getElementById('my-posts-btn');
+const pagerEl     = document.getElementById('pagination');
+document.getElementById('year').textContent = new Date().getFullYear();
 
-  const loginA   = document.querySelector('a[href="#login"]');
-  const writeBtn = document.querySelector('.hero-actions .primary');
-  const grid     = document.getElementById('post-grid');
-  const myPostsBtn = document.getElementById('my-posts-btn');
-  document.getElementById('year').textContent = new Date().getFullYear();
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
 
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-
-  async function login() {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.warn('Popup failed:', err.code);
-      await signInWithRedirect(auth, provider);
-    }
+async function login() {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (err) {
+    console.warn('Popup failed:', err.code);
+    await signInWithRedirect(auth, provider);
   }
+}
+getRedirectResult(auth).catch(err => console.error('Redirect error:', err));
 
-  getRedirectResult(auth).catch(err => {
-    console.error('Redirect error:', err);
-  });
+loginA.addEventListener('click', async (e) => {
+  e.preventDefault();
+  if (auth.currentUser) await signOut(auth);
+  else await login();
+});
 
-  loginA.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (auth.currentUser) {
-      await signOut(auth);
-    } else {
-      await login();
-    }
-  });
+/* ================= 상태들 ================= */
+const PAGE_SIZE = 30;
+let stopPosts = null;        // 현재 페이지 구독 해제
+let myMode = false;          // false: 전체, true: 내 글
+let currentTag = null;       // null: 전체, 문자열: 태그
+let currentPage = 1;         // 1부터 시작
+let totalPages = 1;
 
-  const writeSection = document.getElementById('write-section');
-const savePostBtn  = document.getElementById('save-post');
-
-// ===== 상태 & 유틸 =====
-let stopPosts = null;   // 현재 피드 구독 해제 함수
-let myMode = false;     // false=전체 글, true=내가 쓴 글
-
+/* ================= 유틸 ================= */
 function escapeHtml(str='') {
   return str.replace(/[&<>"']/g, s => (
     {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#039;'}[s]
   ));
 }
+function fmtTS(ts) {
+  try {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : new Date(ts));
+    return new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium', timeStyle: 'short' }).format(d);
+  } catch { return ''; }
+}
+function setQueryParam(key, value) {
+  const url = new URL(location.href);
+  if (value === null || value === undefined || value === '' ) url.searchParams.delete(key);
+  else url.searchParams.set(key, value);
+  history.pushState({ [key]: value }, '', url);
+}
+function getQueryParam(key) {
+  const url = new URL(location.href);
+  return url.searchParams.get(key);
+}
 
-// ===== 렌더 + (내 글 모드에서만) 삭제 버튼 바인딩
+/* ================= 렌더 ================= */
 function renderPosts(snap, mine) {
   grid.innerHTML = snap.docs.map(d => {
     const p = d.data();
@@ -404,7 +419,6 @@ function renderPosts(snap, mine) {
         </div>
         <p class="card-desc">${escapeHtml(p.preview || '')}</p>
         <div class="card-actions">
-          <!-- 🔹 [ADD] 좋아요 버튼 -->
           <button class="ghost like-btn" data-id="${d.id}">
             👍 <span class="like-count">${likes}</span>
           </button>
@@ -415,86 +429,179 @@ function renderPosts(snap, mine) {
   }).join('');
 
   if (mine) {
-  grid.querySelectorAll('.del-btn').forEach(btn => {
-    btn.onclick = async (e) => {
-      const card = e.currentTarget.closest('[data-id]');
-      const id = card.dataset.id;
-      if (!confirm('이 글을 삭제할까요?')) return;
-      try {
-        await deleteDoc(doc(db, 'posts', id)); // Firestore에서 삭제
-        card.remove(); // 화면에서 즉시 제거
-      } catch (err) {
-        console.error('삭제 오류:', err);
-        alert('삭제 중 오류: ' + err.message);
-      }
-    };
+    grid.querySelectorAll('.del-btn').forEach(btn => {
+      btn.onclick = async (e) => {
+        const card = e.currentTarget.closest('[data-id]');
+        const id = card.dataset.id;
+        if (!confirm('이 글을 삭제할까요?')) return;
+        try {
+          await deleteDoc(doc(db, 'posts', id));
+          card.remove();
+        } catch (err) {
+          console.error('삭제 오류:', err);
+          alert('삭제 중 오류: ' + err.message);
+        }
+      };
+    });
+  }
+}
+
+/* ================= 페이지네이션 렌더 ================= */
+function renderPagination() {
+  if (!pagerEl) return;
+  const items = [];
+
+  const prevDisabled = currentPage <= 1 ? 'disabled' : '';
+  const nextDisabled = currentPage >= totalPages ? 'disabled' : '';
+
+  items.push(`<button class="page-btn" data-page="${currentPage-1}" ${prevDisabled}>이전</button>`);
+
+  // 페이지 번호 (많으면 앞/뒤 줄이기)
+  const windowSize = 5;
+  let start = Math.max(1, currentPage - Math.floor(windowSize/2));
+  let end   = Math.min(totalPages, start + windowSize - 1);
+  if (end - start + 1 < windowSize) start = Math.max(1, end - windowSize + 1);
+
+  if (start > 1) {
+    items.push(`<button class="page-btn" data-page="1">1</button>`);
+    if (start > 2) items.push(`<span class="page-btn" style="cursor:default;">…</span>`);
+  }
+  for (let p = start; p <= end; p++) {
+    items.push(`<button class="page-btn ${p===currentPage?'active':''}" data-page="${p}">${p}</button>`);
+  }
+  if (end < totalPages) {
+    if (end < totalPages - 1) items.push(`<span class="page-btn" style="cursor:default;">…</span>`);
+    items.push(`<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`);
+  }
+
+  items.push(`<button class="page-btn" data-page="${currentPage+1}" ${nextDisabled}>다음</button>`);
+
+  pagerEl.innerHTML = items.join('');
+
+  pagerEl.querySelectorAll('.page-btn[data-page]').forEach(btn => {
+    const to = parseInt(btn.getAttribute('data-page'),10);
+    if (!to || to < 1 || to > totalPages || to === currentPage) return;
+    btn.addEventListener('click', () => goToPage(to));
   });
 }
 
+/* ==================== 쿼리 빌드 & 구독 ==================== */
+/**
+ * 현재 상태(myMode, currentTag)에 맞는 base query를 생성
+ */
+function buildBaseQuery(uidForMine=null) {
+  const col = collection(db, 'posts');
+  let q1;
+  if (currentTag) {
+    q1 = query(col, where('tag','==', currentTag), orderBy('createdAt','desc'));
+  } else if (uidForMine) {
+    q1 = query(col, where('uid','==', uidForMine), orderBy('createdAt','desc'));
+  } else {
+    q1 = query(col, orderBy('createdAt','desc'));
+  }
+  return q1;
 }
 
-// ===== 구독 도우미
-function subscribeAllPosts() {
-  if (stopPosts) { stopPosts(); stopPosts = null; }
-  const q = query(collection(db, 'posts'), orderBy('createdAt','desc'), limit(30));
-  stopPosts = onSnapshot(q, (snap) => renderPosts(snap, /*mine*/ false));
+/**
+ * 총 문서 수(count) 조회
+ */
+async function fetchTotalCount(uidForMine=null) {
+  const qBase = buildBaseQuery(uidForMine);
+  const snap = await getCountFromServer(qBase);
+  return snap.data().count || 0;
 }
 
-function subscribeMyPosts(uid) {
-  if (stopPosts) { stopPosts(); stopPosts = null; }
-  // ⚠ 처음에 색인 필요 알림이 뜰 수 있음 → Firestore 콘솔에서 복합색인 생성 버튼 눌러주면 됨.
-  const q = query(
-    collection(db, 'posts'),
-    where('uid', '==', uid),
-    orderBy('createdAt','desc'),
-    limit(30)
-  );
-  stopPosts = onSnapshot(q, (snap) => renderPosts(snap, /*mine*/ true));
+/**
+ * 특정 페이지의 커서를 계산한 뒤 그 페이지를 구독(onSnapshot)
+ */
+async function subscribePage(pageNum, uidForMine=null) {
+  if (stopPosts) { try { stopPosts(); } catch(_){} stopPosts = null; }
+
+  const qBase = buildBaseQuery(uidForMine);
+  const skip = (pageNum - 1) * PAGE_SIZE;
+
+  // 커서 문서 찾아가기: skip이 0이면 바로 페이지 쿼리, 아니면 마지막 커서 문서 찾기
+  let qPage;
+  if (skip === 0) {
+    qPage = query(qBase, limit(PAGE_SIZE));
+  } else {
+    // skip개를 건너뛰기 위한 커서(=skip번째 문서의 "이후")를 만들기 위해
+    // skip 개까지 가져오는 사전 쿼리
+    const preQ = query(qBase, limit(skip));
+    const preSnap = await getDocs(preQ);
+    const last = preSnap.docs[preSnap.docs.length - 1];
+    if (!last) {
+      // skip이 범위를 벗어난 경우: 빈 페이지 구독
+      qPage = query(qBase, limit(PAGE_SIZE));
+    } else {
+      qPage = query(qBase, startAfter(last), limit(PAGE_SIZE));
+    }
+  }
+
+  // 해당 페이지 실시간 구독
+  stopPosts = onSnapshot(qPage, (snap) => renderPosts(snap, !!uidForMine));
 }
 
-// 앱 로드 시 기본은 전체 글
-subscribeAllPosts();
+/**
+ * 상태에 맞춰 totalPages 계산 → 페이지 구독 → UI 갱신
+ */
+async function refreshFeedForState() {
+  const uid = (myMode && auth.currentUser) ? auth.currentUser.uid : null;
+  const total = await fetchTotalCount(uid);
+  totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
 
+  await subscribePage(currentPage, uid);
+  renderPagination();
+}
 
-onAuthStateChanged(auth, (user) => {
-  console.log('[auth state]', user);
+/* ================= 초기 구독 (기본: 전체 글, page from URL) ================= */
+function parseInitialURLState() {
+  const p = parseInt(getQueryParam('page') || '1', 10);
+  currentPage = isNaN(p) || p < 1 ? 1 : p;
 
+  const tag = getQueryParam('tag');
+  currentTag = tag || null;
+  setActiveChip(currentTag);
+}
+
+function setActiveChip(tag){
+  document.querySelectorAll('.chips .chip').forEach(a=>{
+    const t = a.textContent.trim();
+    const key = (t === '홈') ? null : t;
+    a.classList.toggle('active', key === tag);
+  });
+}
+
+/* ================= 글쓰기 / 내 글 토글 / 로그인 상태 처리 ================= */
+const writeSection = document.getElementById('write-section');
+const savePostBtn  = document.getElementById('save-post');
+
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     loginA.textContent = `로그아웃 (${user.displayName})`;
-    // 글쓰기 → write.html (전체 화면)
     writeBtn.onclick = () => { window.location.href = 'write.html'; };
 
-    // 내가 쓴 글 토글
-    myPostsBtn.onclick = () => {
+    myPostsBtn.onclick = async () => {
       myMode = !myMode;
-      if (myMode) {
-        myPostsBtn.textContent = '전체 글';
-        subscribeMyPosts(user.uid);
-      } else {
-        myPostsBtn.textContent = '내가 쓴 글';
-        subscribeAllPosts();
-      }
+      // 모드 변경 시 페이지를 1로 리셋
+      currentPage = 1;
+      setQueryParam('page', currentPage);
+      myPostsBtn.textContent = myMode ? '전체 글' : '내가 쓴 글';
+      await refreshFeedForState();
     };
-    // 로그인 직후 라벨 정리
     myPostsBtn.textContent = myMode ? '전체 글' : '내가 쓴 글';
-
   } else {
     loginA.textContent = '로그인';
-    writeBtn.onclick = async () => {
-      alert('글을 쓰려면 로그인하세요');
-      await login();
-    };
-    myPostsBtn.onclick = async () => {
-      alert('내가 쓴 글을 보려면 로그인하세요');
-      await login();
-    };
-    // 로그아웃 시 전체 글로 복귀
+    writeBtn.onclick = async () => { alert('글을 쓰려면 로그인하세요'); await login(); };
+    myPostsBtn.onclick = async () => { alert('내가 쓴 글을 보려면 로그인하세요'); await login(); };
     myMode = false;
     myPostsBtn.textContent = '내가 쓴 글';
-    subscribeAllPosts();
   }
-});
 
+  // 로그인 상태 변동 시 현재 상태로 피드 갱신
+  await refreshFeedForState();
+});
 
 savePostBtn.onclick = async () => {
   const title = document.getElementById('post-title').value.trim();
@@ -516,50 +623,16 @@ savePostBtn.onclick = async () => {
   writeSection.style.display = 'none';
 };
 
-
-  async function handleWritePost() {
-    const title = prompt('제목:');
-    if (!title) return;
-    const content = prompt('내용:');
-    if (!content) return;
-    await addDoc(collection(db, 'posts'), {
-      title,
-      content,
-      preview: content.slice(0, 60) + '…',
-      uid: auth.currentUser.uid,
-      author: auth.currentUser.displayName,
-      createdAt: serverTimestamp()
-    });
-  }
-
-  
-// ========================= [ADD] 카드 클릭 → 모달로 상세 보기 =========================
-
-// 모달 엘리먼트 참조
+/* ================= 카드 클릭 → 모달 열기 ================= */
 const postModal      = document.getElementById('postModal');
 const elPostTitle    = document.getElementById('postModalTitle');
 const elPostBody     = document.getElementById('postModalBody');
 const elPostAuthor   = document.getElementById('postModalAuthor');
 const elPostDate     = document.getElementById('postModalDate');
 const elPostTag      = document.getElementById('postModalTag');
-
 let _lastFocusedEl = null;
 
-// Firestore Timestamp → 보기 좋은 문자열
-function fmtTS(ts) {
-  try {
-    if (!ts) return '';
-    // Firestore Timestamp 객체 또는 Date 둘 다 대응
-    const d = ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : new Date(ts));
-    return new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium', timeStyle: 'short' }).format(d);
-  } catch {
-    return '';
-  }
-}
-
-// 모달 열기
 function openPostModal(data) {
-  // 본문 채우기
   elPostTitle.textContent  = data.title || '(제목 없음)';
   elPostBody.innerHTML     =
     (data.content ? escapeHtml(data.content) : (data.preview ? escapeHtml(data.preview) : '')).replace(/\n/g, '<br>');
@@ -567,27 +640,22 @@ function openPostModal(data) {
   elPostDate.textContent   = fmtTS(data.createdAt);
   elPostTag.textContent    = data.tag || '게시글';
 
-  // 좋아요 UI 참조 + 초기값
   const modalLikeBtn   = document.getElementById('modalLikeBtn');
   const modalLikeCount = document.getElementById('modalLikeCount');
   if (modalLikeBtn)   modalLikeBtn.dataset.id = data.__id || '';
   if (modalLikeCount) modalLikeCount.textContent = data.likesCount || 0;
 
-  // 기존 구독 해제
   if (modalUnsub) { try { modalUnsub(); } catch(_) {} modalUnsub = null; }
 
-  // 실시간 구독 (likesCount / 내가 누른 상태)
   if (data.__id) {
     const unsubs = [];
     const postRef = doc(db, 'posts', data.__id);
 
-    // 글 문서 실시간 → 카운트 갱신
     unsubs.push(onSnapshot(postRef, (snap) => {
       const cur = snap.data();
       if (modalLikeCount) modalLikeCount.textContent = (cur?.likesCount) ?? 0;
     }));
 
-    // 내가 누른 상태 실시간 → 버튼 스타일
     if (auth.currentUser && modalLikeBtn) {
       const likeRef = doc(db, `posts/${data.__id}/likes`, auth.currentUser.uid);
       unsubs.push(onSnapshot(likeRef, (lsnap) => {
@@ -595,28 +663,22 @@ function openPostModal(data) {
       }));
     }
 
-    // 한 번에 해제할 수 있게 래핑
     modalUnsub = () => unsubs.forEach(u => { try { u(); } catch(_) {} });
   }
 
-  // 모달 열기
   postModal.classList.remove('hidden');
   postModal.setAttribute('aria-hidden', 'false');
   _lastFocusedEl = document.activeElement;
   postModal.querySelector('.modal-close')?.focus();
 
-  // URL 상태 반영
   if (data.__id) {
     const url = new URL(location.href);
     url.searchParams.set('post', data.__id);
     history.pushState({ post: data.__id }, '', url);
   }
 }
-
-// 모달 닫기
 function closePostModal(popState = true) {
-    if (modalUnsub) { modalUnsub(); modalUnsub = null; }
-
+  if (modalUnsub) { modalUnsub(); modalUnsub = null; }
   if (postModal.classList.contains('hidden')) return;
   postModal.classList.add('hidden');
   postModal.setAttribute('aria-hidden', 'true');
@@ -625,16 +687,12 @@ function closePostModal(popState = true) {
     url.searchParams.delete('post');
     history.pushState({}, '', url);
   }
-  if (_lastFocusedEl && typeof _lastFocusedEl.focus === 'function') {
-    _lastFocusedEl.focus();
-  }
+  if (_lastFocusedEl && typeof _lastFocusedEl.focus === 'function') _lastFocusedEl.focus();
 }
 
-// 카드(그리드) 이벤트 위임: 클릭 → 해당 글 로드 → 모달 표시
 grid.addEventListener('click', async (e) => {
   const card = e.target.closest('.post-card[data-id]');
   if (!card) return;
-
   const id = card.getAttribute('data-id');
   try {
     const snap = await getDoc(doc(db, 'posts', id));
@@ -643,23 +701,19 @@ grid.addEventListener('click', async (e) => {
       return;
     }
     const data = snap.data();
-    data.__id = id; // 딥링크용
+    data.__id = id;
     openPostModal(data);
   } catch (err) {
     console.error('글 불러오기 오류:', err);
     alert('글을 불러오지 못했습니다.');
   }
 });
-
-// 모달 인터랙션 (배경/닫기 버튼/ESC)
 postModal.addEventListener('click', (e) => {
   if (e.target.matches('[data-close]')) closePostModal();
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePostModal();
 });
-
-// 뒤/앞으로 가기 시 동기화 (딥링크)
 window.addEventListener('popstate', async (e) => {
   const url = new URL(location.href);
   const id = url.searchParams.get('post');
@@ -667,15 +721,9 @@ window.addEventListener('popstate', async (e) => {
   try {
     const snap = await getDoc(doc(db, 'posts', id));
     if (!snap.exists()) return closePostModal(false);
-    const data = snap.data();
-    data.__id = id;
-    openPostModal(data);
-  } catch {
-    closePostModal(false);
-  }
+    const data = snap.data(); data.__id = id; openPostModal(data);
+  } catch { closePostModal(false); }
 });
-
-// 초기 진입 시 ?post=<id>로 바로 열기
 (function initOpenByQuery() {
   try {
     const url = new URL(location.href);
@@ -683,18 +731,14 @@ window.addEventListener('popstate', async (e) => {
     if (!id) return;
     getDoc(doc(db, 'posts', id)).then(snap => {
       if (!snap.exists()) return;
-      const data = snap.data();
-      data.__id = id;
-      openPostModal(data);
+      const data = snap.data(); data.__id = id; openPostModal(data);
     });
   } catch {}
 })();
-// === [ADD] 답글 버튼 연결 ===
-const postReplyBtn = document.getElementById('postReplyBtn');
-let _currentOpenedPostId = null; // 현재 모달에 열린 글의 문서ID
 
-// openPostModal 호출부에서 현재 글 ID를 기억하도록, 기존 함수 끝부분 직전에 아래 한 줄만 추가하면 좋아요.
-// openPostModal(data) 안의 마지막 부분 근처:
+/* === 답글 버튼 → reply.html로 이동 === */
+const postReplyBtn = document.getElementById('postReplyBtn');
+let _currentOpenedPostId = null;
 (function patchOpenModal(){
   const _origOpen = openPostModal;
   openPostModal = function(data){
@@ -702,94 +746,52 @@ let _currentOpenedPostId = null; // 현재 모달에 열린 글의 문서ID
     _currentOpenedPostId = data.__id || null;
   };
 })();
-
-// 버튼 → reply.html로 이동
 postReplyBtn.addEventListener('click', () => {
-  if (!_currentOpenedPostId) {
-    alert('게시글 정보를 찾지 못했습니다.');
-    return;
-  }
-  // 새 창 이동(같은 탭 이동이면 location.href)
+  if (!_currentOpenedPostId) { alert('게시글 정보를 찾지 못했습니다.'); return; }
   window.location.href = `reply.html?post=${encodeURIComponent(_currentOpenedPostId)}`;
 });
 
-/* ===================== [ADD] 태그 필터 ===================== */
+/* ================= 태그 필터 ================= */
 const chipsBar = document.querySelector('.chips');
-let currentTag = null;   // null = 전체
-
-function setActiveChip(tag){
-  chipsBar?.querySelectorAll('.chip').forEach(a=>{
-    const t = a.textContent.trim();
-    const key = (t === '홈') ? null : t;
-    a.classList.toggle('active', key === tag);
-  });
-}
-
-/** 태그 구독 */
-function subscribeTag(tag){
-  if (stopPosts) { stopPosts(); stopPosts = null; }
-  // 태그 필터 들어가면 "내가 쓴 글" 모드는 자동 해제
-  myMode = false;
-  myPostsBtn.textContent = '내가 쓴 글';
-
-  const q = query(
-    collection(db, 'posts'),
-    where('tag','==', tag),
-    orderBy('createdAt','desc'),
-    limit(30)
-  );
-  stopPosts = onSnapshot(q, (snap) => renderPosts(snap, /*mine*/ false));
-}
-
-/** 칩 클릭 → 태그 적용 (이벤트 위임) */
-chipsBar?.addEventListener('click', (e)=>{
+chipsBar?.addEventListener('click', async (e)=>{
   const a = e.target.closest('.chip');
   if (!a) return;
   e.preventDefault();
   const label = a.textContent.trim();
   const tag = (label === '홈') ? null : label;
-
   currentTag = tag;
   setActiveChip(tag);
 
-  // URL 갱신 (?tag=교육과정)
-  const url = new URL(location.href);
-  if (tag) url.searchParams.set('tag', tag);
-  else     url.searchParams.delete('tag');
-  history.pushState({ tag }, '', url);
+  // 태그가 바뀌면 페이지 1로
+  currentPage = 1;
+  setQueryParam('tag', tag || '');
+  setQueryParam('page', currentPage);
 
-  // 구독 전환
-  if (tag) subscribeTag(tag);
-  else     subscribeAllPosts();
+  // 태그 필터 들어가면 "내 글" 모드는 자동 해제
+  if (myMode) {
+    myMode = false;
+    myPostsBtn.textContent = '내가 쓴 글';
+  }
+
+  await refreshFeedForState();
 });
 
-/** 뒤/앞으로 가기 시 동기화 */
-window.addEventListener('popstate', ()=>{
-  const url = new URL(location.href);
-  const tag = url.searchParams.get('tag');
-  currentTag = tag; setActiveChip(tag);
-  if (tag) subscribeTag(tag); else subscribeAllPosts();
+// 뒤/앞으로 가기 시 동기화 (태그/페이지)
+window.addEventListener('popstate', async ()=>{
+  const tag = getQueryParam('tag');
+  currentTag = tag || null;
+  setActiveChip(currentTag);
+
+  const p = parseInt(getQueryParam('page') || '1',10);
+  currentPage = isNaN(p) || p < 1 ? 1 : p;
+
+  await refreshFeedForState();
 });
 
-/** 초기 진입 시 ?tag= 파라미터 적용 */
-(function initTagFromURL(){
-  const url = new URL(location.href);
-  const tag = url.searchParams.get('tag');
-  currentTag = tag; setActiveChip(tag);
-  if (tag) subscribeTag(tag);
-})();
-
-/* ===================== 좋아요 토글 ===================== */
-
-// 한 게시물의 좋아요를 토글한다.
-// posts/{postId}/likes/{uid} 문서를 트랜잭션으로 생성/삭제하고,
-// posts/{postId}.likesCount 를 increment(+1/-1) 한다.
+/* ================= 좋아요 토글 ================= */
 async function toggleLike(postId) {
   const user = auth.currentUser;
-  if (!user) {
-    alert('로그인 후 이용해 주세요.');
-    return;
-  }
+  if (!user) { alert('로그인 후 이용해 주세요.'); return; }
   const uid = user.uid;
   const postRef = doc(db, 'posts', postId);
   const likeRef = doc(db, `posts/${postId}/likes`, uid);
@@ -798,23 +800,18 @@ async function toggleLike(postId) {
     await runTransaction(db, async (tx) => {
       const likeSnap = await tx.get(likeRef);
       if (likeSnap.exists()) {
-        // 이미 눌렀으면 취소
         tx.delete(likeRef);
         tx.update(postRef, { likesCount: increment(-1) });
       } else {
-        // 처음 누름
         tx.set(likeRef, { uid, createdAt: serverTimestamp() });
         tx.update(postRef, { likesCount: increment(1) });
       }
     });
-    // onSnapshot으로 카드가 다시 그려지면서 개수/버튼이 갱신됨
   } catch (err) {
     console.error('[LIKE TOGGLE ERROR]', err);
     alert('좋아요 처리 중 오류: ' + (err.message || err.code || err));
   }
 }
-
-// grid 영역에서 like 버튼 클릭을 위임 처리
 grid.addEventListener('click', (e) => {
   const btn = e.target.closest('.like-btn');
   if (!btn) return;
@@ -822,20 +819,23 @@ grid.addEventListener('click', (e) => {
   if (!postId) return;
   toggleLike(postId);
 });
-
 document.getElementById('modalLikeBtn').addEventListener('click', (e) => {
   const postId = e.currentTarget.dataset.id;
   if (!postId) return;
   toggleLike(postId);
 });
 
+/* ================= 페이지 이동 함수 ================= */
+async function goToPage(p) {
+  currentPage = Math.min(Math.max(1, p), totalPages);
+  setQueryParam('page', currentPage);
+  await refreshFeedForState();
+}
 
+/* ================= 초기화 ================= */
+parseInitialURLState();
+await refreshFeedForState();
 
 </script>
 </body>
 </html>
-
-
-
-
-
