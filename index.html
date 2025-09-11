@@ -382,6 +382,12 @@ let currentTag = null;       // null: 전체, 문자열: 태그
 let currentPage = 1;         // 1부터 시작
 let totalPages = 1;
 
+/* === 관리자 UID 목록 & 플래그 === */
+const ADMIN_UIDS = [
+  'skHlarAtUPOPIY7w4wUh7VqgsUh1', // ← 관리자 UID
+];
+let isAdmin = false;
+
 /* ================= 유틸 ================= */
 function escapeHtml(str='') {
   return str.replace(/[&<>"']/g, s => (
@@ -410,7 +416,7 @@ function getQueryParam(key) {
 function renderPosts(snap, mine) {
   grid.innerHTML = snap.docs.map(d => {
     const p = d.data();
-    const canDelete = mine && p.uid === (auth.currentUser?.uid || '');
+    const canDelete = isAdmin || (p.uid === (auth.currentUser?.uid || '')); // ★ 관리자 or 본인
     const likes = p.likesCount || 0;
     return `
       <article class="card post-card" data-id="${d.id}">
@@ -429,22 +435,21 @@ function renderPosts(snap, mine) {
     `;
   }).join('');
 
-  if (mine) {
-    grid.querySelectorAll('.del-btn').forEach(btn => {
-      btn.onclick = async (e) => {
-        const card = e.currentTarget.closest('[data-id]');
-        const id = card.dataset.id;
-        if (!confirm('이 글을 삭제할까요?')) return;
-        try {
-          await deleteDoc(doc(db, 'posts', id));
-          card.remove();
-        } catch (err) {
-          console.error('삭제 오류:', err);
-          alert('삭제 중 오류: ' + err.message);
-        }
-      };
-    });
-  }
+  // ★ mine 여부와 무관하게 항상 바인딩 (관리자는 전체에서 삭제 가능)
+  grid.querySelectorAll('.del-btn').forEach(btn => {
+    btn.onclick = async (e) => {
+      const card = e.currentTarget.closest('[data-id]');
+      const id = card.dataset.id;
+      if (!confirm('이 글을 삭제할까요?')) return;
+      try {
+        await deleteDoc(doc(db, 'posts', id));
+        card.remove();
+      } catch (err) {
+        console.error('삭제 오류:', err);
+        alert('삭제 중 오류: ' + err.message);
+      }
+    };
+  });
 }
 
 /* ================= 페이지네이션 렌더 ================= */
@@ -521,18 +526,15 @@ async function subscribePage(pageNum, uidForMine=null) {
   const qBase = buildBaseQuery(uidForMine);
   const skip = (pageNum - 1) * PAGE_SIZE;
 
-  // 커서 문서 찾아가기: skip이 0이면 바로 페이지 쿼리, 아니면 마지막 커서 문서 찾기
+  // 커서 문서 찾아가기
   let qPage;
   if (skip === 0) {
     qPage = query(qBase, limit(PAGE_SIZE));
   } else {
-    // skip개를 건너뛰기 위한 커서(=skip번째 문서의 "이후")를 만들기 위해
-    // skip 개까지 가져오는 사전 쿼리
     const preQ = query(qBase, limit(skip));
     const preSnap = await getDocs(preQ);
     const last = preSnap.docs[preSnap.docs.length - 1];
     if (!last) {
-      // skip이 범위를 벗어난 경우: 빈 페이지 구독
       qPage = query(qBase, limit(PAGE_SIZE));
     } else {
       qPage = query(qBase, startAfter(last), limit(PAGE_SIZE));
@@ -579,13 +581,15 @@ const writeSection = document.getElementById('write-section');
 const savePostBtn  = document.getElementById('save-post');
 
 onAuthStateChanged(auth, async (user) => {
+  // ★ 관리자 여부 세팅
+  isAdmin = !!user && ADMIN_UIDS.includes(user.uid);
+
   if (user) {
     loginA.textContent = `로그아웃 (${user.displayName})`;
     writeBtn.onclick = () => { window.location.href = 'write.html'; };
 
     myPostsBtn.onclick = async () => {
       myMode = !myMode;
-      // 모드 변경 시 페이지를 1로 리셋
       currentPage = 1;
       setQueryParam('page', currentPage);
       myPostsBtn.textContent = myMode ? '전체 글' : '내가 쓴 글';
@@ -840,4 +844,3 @@ await refreshFeedForState();
 </script>
 </body>
 </html>
-
